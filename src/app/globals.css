@@ -1,0 +1,206 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* ===== Knight Ads — Premium dark Solana/gold theme ===== */
+:root {
+  --radius: 0.75rem;
+
+  /* Dark is the default for this premium crypto platform */
+  --background: oklch(0.13 0.018 264);
+  --foreground: oklch(0.97 0.012 90);
+
+  --card: oklch(0.17 0.02 264);
+  --card-foreground: oklch(0.97 0.012 90);
+
+  --popover: oklch(0.16 0.02 264);
+  --popover-foreground: oklch(0.97 0.012 90);
+
+  /* Primary = gold/amber accent (Knight brand) */
+  --primary: oklch(0.78 0.16 75);
+  --primary-foreground: oklch(0.16 0.04 75);
+
+  /* Secondary = deep slate */
+  --secondary: oklch(0.22 0.025 264);
+  --secondary-foreground: oklch(0.95 0.012 90);
+
+  --muted: oklch(0.22 0.025 264);
+  --muted-foreground: oklch(0.68 0.02 264);
+
+  /* Accent = Solana purple-teal gradient hint */
+  --accent: oklch(0.55 0.18 280);
+  --accent-foreground: oklch(0.97 0.012 90);
+
+  --destructive: oklch(0.65 0.22 25);
+
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.78 0.16 75 / 60%);
+
+  /* Chart palette: gold + Solana gradient stops */
+  --chart-1: oklch(0.78 0.16 75);     /* gold */
+  --chart-2: oklch(0.62 0.22 160);    /* teal-green */
+  --chart-3: oklch(0.58 0.20 280);    /* purple */
+  --chart-4: oklch(0.70 0.18 200);    /* cyan */
+  --chart-5: oklch(0.65 0.22 25);     /* coral */
+
+  --sidebar: oklch(0.15 0.02 264);
+  --sidebar-foreground: oklch(0.97 0.012 90);
+  --sidebar-primary: oklch(0.78 0.16 75);
+  --sidebar-primary-foreground: oklch(0.16 0.04 75);
+  --sidebar-accent: oklch(0.22 0.025 264);
+  --sidebar-accent-foreground: oklch(0.97 0.012 90);
+  --sidebar-border: oklch(1 0 0 / 8%);
+  --sidebar-ring: oklch(0.78 0.16 75 / 60%);
+}
+
+.dark {
+  /* dark is the only theme for this app — kept for compatibility */
+  --background: oklch(0.13 0.018 264);
+  --foreground: oklch(0.97 0.012 90);
+  --card: oklch(0.17 0.02 264);
+  --card-foreground: oklch(0.97 0.012 90);
+  --popover: oklch(0.16 0.02 264);
+  --popover-foreground: oklch(0.97 0.012 90);
+  --primary: oklch(0.78 0.16 75);
+  --primary-foreground: oklch(0.16 0.04 75);
+  --secondary: oklch(0.22 0.025 264);
+  --secondary-foreground: oklch(0.95 0.012 90);
+  --muted: oklch(0.22 0.025 264);
+  --muted-foreground: oklch(0.68 0.02 264);
+  --accent: oklch(0.55 0.18 280);
+  --accent-foreground: oklch(0.97 0.012 90);
+  --destructive: oklch(0.65 0.22 25);
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.78 0.16 75 / 60%);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "ss01", "cv01";
+  }
+  /* Premium scrollbar */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: oklch(0.3 0.02 264);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: oklch(0.42 0.06 75); background-clip: padding-box; }
+}
+
+@layer utilities {
+  /* Solana-inspired gradient text */
+  .text-gradient-gold {
+    background: linear-gradient(120deg, oklch(0.85 0.16 75) 0%, oklch(0.72 0.18 60) 50%, oklch(0.65 0.20 40) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+  .text-gradient-solana {
+    background: linear-gradient(120deg, oklch(0.62 0.22 160) 0%, oklch(0.58 0.20 280) 50%, oklch(0.70 0.18 200) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+  .bg-gradient-gold {
+    background: linear-gradient(120deg, oklch(0.85 0.16 75) 0%, oklch(0.72 0.18 60) 50%, oklch(0.65 0.20 40) 100%);
+  }
+  .bg-gradient-solana {
+    background: linear-gradient(120deg, oklch(0.62 0.22 160) 0%, oklch(0.58 0.20 280) 50%, oklch(0.70 0.18 200) 100%);
+  }
+  /* Glass card */
+  .glass {
+    background: oklch(0.17 0.02 264 / 70%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid oklch(1 0 0 / 8%);
+  }
+  .glass-strong {
+    background: oklch(0.17 0.02 264 / 88%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid oklch(1 0 0 / 10%);
+  }
+  /* Subtle grid background */
+  .bg-grid {
+    background-image:
+      linear-gradient(oklch(1 0 0 / 3%) 1px, transparent 1px),
+      linear-gradient(90deg, oklch(1 0 0 / 3%) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+  .bg-grid-fade {
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+  }
+  /* Glow */
+  .glow-gold {
+    box-shadow: 0 0 0 1px oklch(0.78 0.16 75 / 30%), 0 8px 32px oklch(0.78 0.16 75 / 18%);
+  }
+  .glow-solana {
+    box-shadow: 0 0 0 1px oklch(0.55 0.18 280 / 30%), 0 8px 32px oklch(0.55 0.18 280 / 22%);
+  }
+  /* Aurora animated background */
+  .aurora {
+    position: absolute;
+    inset: -50% -10% auto -10%;
+    height: 70vh;
+    background:
+      radial-gradient(40% 60% at 20% 30%, oklch(0.62 0.22 160 / 22%), transparent 70%),
+      radial-gradient(35% 55% at 80% 20%, oklch(0.55 0.20 280 / 22%), transparent 70%),
+      radial-gradient(45% 65% at 50% 70%, oklch(0.78 0.16 75 / 16%), transparent 70%);
+    filter: blur(40px);
+    pointer-events: none;
+    z-index: 0;
+  }
+}
