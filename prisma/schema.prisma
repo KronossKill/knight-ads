@@ -1,179 +1,169 @@
-// Knight Ads Platform - Master Schema
-// Decentralized Solana advertising platform with $Knight token
-// Highly configurable by administrator without programming
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-// Singleton key-value store for all global platform parameters
-// that the administrator can configure without touching code.
 model Setting {
-  key       String   @id // e.g. "commissionPercent", "withdrawalFeePercent", "reviewWindowHours"
-  value     String   // stored as string, parsed by type on read
-  type      String   @default("string") // "number" | "string" | "boolean"
-  label     String   // human-readable label (ES) shown in admin panel
-  category  String   @default("general") // grouping for admin UI
-  min       String?  // optional min for number fields
-  max       String?  // optional max for number fields
-  help      String?  // helper text shown under the field
+  key       String   @id
+  value     String
+  type      String   @default("string")
+  label     String
+  category  String   @default("general")
+  min       String?
+  max       String?
+  help      String?
   updatedAt DateTime @updatedAt
 }
 
-// Advertiser Plans (Paquetes de Vistas) - 1:1 with each published ad
 model AdvertiserPlan {
-  id              String   @id @default(cuid())
-  code            String   @unique // "minimo" | "medio" | "alta" | "superior" | "permanente"
-  name            String   // display name (ES)
-  viewsIncluded   Int      // number of prepaid views
-  priceKnight     Float    // total price in $Knight
-  viewSeconds     Int      // required view duration in seconds
-  feedPriority    Int      @default(100) // higher = shown first in feed
-  diamondCount    Int      @default(1) // 1-5 diamond icons identifying tier
-  badgeColor      String   @default("amber") // tailwind color token for badge
-  description     String   // marketing description
-  isActive        Boolean  @default(true)
-  isPermanent     Boolean  @default(false) // permanent plan = always top of feed
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  ads Ad[]
+  id            String   @id @default(cuid())
+  code          String   @unique
+  name          String
+  viewsIncluded Int
+  priceKnight   Float
+  viewSeconds   Int
+  feedPriority  Int      @default(100)
+  diamondCount  Int      @default(1)
+  badgeColor    String   @default("amber")
+  description   String
+  isActive      Boolean  @default(true)
+  isPermanent   Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  ads           Ad[]
 }
 
-// Side-rail banner ads (left/right of the platform) — configured by admin
 model SideAd {
-  id          String   @id @default(cuid())
-  position    String   // "left" | "right"
-  title       String
-  content     String
-  link        String
-  imageUrl    String?  // supports GIF / animated / banner / static
-  mediaType   String   @default("image") // image | gif | banner | video
-  width       Int      @default(220) // banner width hint
-  height      Int      @default(120) // banner height hint
-  bgColor     String   @default("slate") // tailwind color token
-  order       Int      @default(0) // sort order within a rail
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(cuid())
+  position  String
+  title     String
+  content   String
+  link      String
+  imageUrl  String?
+  mediaType String   @default("image")
+  width     Int      @default(220)
+  height    Int      @default(120)
+  bgColor   String   @default("slate")
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-// Visitor Plans (multiplicadores con duración configurable)
 model VisitorPlan {
   id              String   @id @default(cuid())
-  code            String   @unique // "estandar" | "gold" | "platinum"
+  code            String   @unique
   name            String
-  costKnight      Float    @default(0) // cost per period (0 = free)
-  durationDays    Int      @default(15) // configurable duration
-  multiplier      Float    @default(1.0) // reward multiplier
-  dailyViewsLimit Int      @default(0) // 0 = unlimited
+  costKnight      Float    @default(0)
+  durationDays    Int      @default(15)
+  multiplier      Float    @default(1.0)
+  dailyViewsLimit Int      @default(0)
   feedPriority    Int      @default(100)
   badgeColor      String   @default("slate")
   description     String
   isActive        Boolean  @default(true)
-  isDefault       Boolean  @default(false) // the plan new visitors get
+  isDefault       Boolean  @default(false)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }
 
-// Treasury sub-accounts A1..A7 - centralized wallet
 model TreasuryAccount {
   id          String   @id @default(cuid())
-  code        String   @unique // "A1" .. "A7"
-  name        String   // human label
+  code        String   @unique
+  name        String
   description String
-  balance     Float    @default(0) // current $Knight balance
+  balance     Float    @default(0)
   color       String   @default("amber")
   updatedAt   DateTime @updatedAt
 }
 
-// Published ads (demo data for feed)
 model Ad {
-  id           String   @id @default(cuid())
-  title        String
-  content      String
-  link         String
-  advertiser   String   // demo advertiser name
-  planId       String
-  plan         AdvertiserPlan @relation(fields: [planId], references: [id])
-  viewsUsed    Int      @default(0)
-  status       String   @default("active") // active | paused | finished | pending | rejected
-  isAdministrative Boolean @default(false) // free admin ad (funded by system wallet A2)
-  imageUrl     String?  // supports GIF / animated / banner / static
-  mediaType    String   @default("image") // image | gif | banner | video
-  createdAt    DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  ratings      AdRating[]
+  id               String         @id @default(cuid())
+  title            String
+  content          String
+  link             String
+  advertiser       String
+  planId           String
+  viewsUsed        Int            @default(0)
+  status           String         @default("active")
+  isAdministrative Boolean        @default(false)
+  imageUrl         String?
+  mediaType        String         @default("image")
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  plan             AdvertiserPlan @relation(fields: [planId], references: [id])
+  ratings          AdRating[]
 }
 
-// Star ratings (1-5) by users on ads
 model AdRating {
   id        String   @id @default(cuid())
   adId      String
-  ad        Ad       @relation(fields: [adId], references: [id], onDelete: Cascade)
-  userLabel String   // email or anonymous label of the rater
-  stars     Int      // 1..5
+  userLabel String
+  stars     Int
   comment   String?
   createdAt DateTime @default(now())
+  ad        Ad       @relation(fields: [adId], references: [id], onDelete: Cascade)
 
-  @@unique([adId, userLabel]) // one rating per user per ad
+  @@unique([adId, userLabel])
 }
 
-// Admin credentials + 2FA secret code (single-record, configurable from admin panel)
 model AdminCredential {
   id           String   @id @default(cuid())
   username     String   @unique
-  passwordHash String   // demo: stored as bcrypt-like or plain (config note)
-  secretCode   String   // 2FA code: letters + numbers, configurable
-  email        String   @default("admin@knight.demo") // where one-time login key is sent
+  passwordHash String
+  secretCode   String
+  email        String   @default("admin@knight.demo")
   mfaLabel     String   @default("Knight Admin MFA")
   updatedAt    DateTime @updatedAt
 }
 
-// Users (for referral system — persisted in SQLite)
 model User {
-  id              String   @id @default(cuid())
-  email           String   @unique
-  name            String
-  role            String   @default("visitante") // visitante | anunciante
-  referralCode    String   @unique // short code for sharing (?ref=CODE)
-  referredByCode  String?  // referral code of the referrer (null or "SYSTEM" for system referrals)
-  balanceKnight   Float    @default(0) // internal $Knight balance (visitor rewards)
-  createdAt       DateTime @default(now())
-
+  id                    String            @id @default(cuid())
+  email                 String            @unique
+  name                  String
+  role                  String            @default("visitante")
+  referralCode          String            @unique
+  referredByCode        String?
+  balanceKnight         Float             @default(0)
+  createdAt             DateTime          @default(now())
   earningsFromReferrals ReferralEarning[] @relation("earner")
   earningsAsReferrer    ReferralEarning[] @relation("source")
 }
 
-// Referral earnings (2-level: level 1 = direct, level 2 = referrer's referrer)
 model ReferralEarning {
-  id              String   @id @default(cuid())
-  earnerUserId    String   // who earned the referral commission
-  earner          User     @relation("earner", fields: [earnerUserId], references: [id])
-  sourceUserId    String   // whose activity generated the commission
-  source          User     @relation("source", fields: [sourceUserId], references: [id])
-  amountKnight    Float    // commission amount
-  level           Int      // 1 = direct referral, 2 = level-2 (referrer's referrer)
-  reason          String   // e.g. "view reward", "welcome bonus"
-  createdAt       DateTime @default(now())
+  id           String   @id @default(cuid())
+  earnerUserId String
+  sourceUserId String
+  amountKnight Float
+  level        Int
+  reason       String
+  createdAt    DateTime @default(now())
+  earner       User     @relation("earner", fields: [earnerUserId], references: [id])
+  source       User     @relation("source", fields: [sourceUserId], references: [id])
 }
 
-// Immutable audit log for transparency
 model AuditLog {
-  id          String   @id @default(cuid())
-  actor       String   // "Super Admin" | "Finance Manager" | ...
-  action      String   // "UPDATE_CONFIG" | "PLAN_UPDATE" | ...
-  entity      String   // "Setting" | "AdvertiserPlan" | ...
-  entityId    String?
-  detail      String
-  before      String?  // JSON snapshot
-  after       String?  // JSON snapshot
-  ipAddress   String?
-  createdAt   DateTime @default(now())
+  id        String   @id @default(cuid())
+  actor     String
+  action    String
+  entity    String
+  entityId  String?
+  detail    String
+  before    String?
+  after     String?
+  ipAddress String?
+  createdAt DateTime @default(now())
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Visit {
+  id        String   @id
+  date      String   @unique
+  count     Int      @default(0)
+  uniqueIps Int      @default(0)
+  updatedAt DateTime
 }
